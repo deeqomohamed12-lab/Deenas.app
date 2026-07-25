@@ -1,19 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Deenas.app</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deenas.app</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#07111f,#0f2d5f,#2563eb);
+color:white;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:30px;
+}
+
+.card{
+max-width:900px;
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(18px);
+padding:60px;
+border-radius:30px;
+text-align:center;
+box-shadow:0 25px 60px rgba(0,0,0,.35);
+}
+
+.logo{
+font-size:20px;
+letter-spacing:4px;
+margin-bottom:20px;
+opacity:.8;
+}
+
+h1{
+font-size:60px;
+margin-bottom:20px;
+}
+
+p{
+font-size:22px;
+line-height:1.7;
+opacity:.9;
+margin-bottom:40px;
+}
+
+button{
+background:white;
+color:#2563eb;
+border:none;
+padding:18px 40px;
+font-size:20px;
+border-radius:50px;
+cursor:pointer;
+font-weight:bold;
+transition:.3s;
+}
+
+button:hover{
+transform:scale(1.08);
+}
+
+.features{
+margin-top:60px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:20px;
+}
+
+.feature{
+background:rgba(255,255,255,.12);
+padding:25px;
+border-radius:20px;
+}
+</style>
+
 </head>
-<body style="font-family: Arial, sans-serif; text-align:center; padding:60px; background:#f5f5f5;">
 
-<h1>Welcome to Deenas.app 🚀</h1>
+<body>
 
-<p>The future of smart hiring starts here.</p>
+<div class="card">
 
-<button style="padding:15px 30px; font-size:18px; border:none; background:#2563eb; color:white; border-radius:8px;">
-Get Started
-</button>
+<div class="logo">
+🚀 DEENAS.APP
+</div>
+
+<h1>The Future of Smart Hiring</h1>
+
+<p>
+Connecting talented people with opportunities through
+AI-powered matching, instant applications,
+and a beautiful experience built for everyone.
+</p>
+
+<button>Join the Waitlist</button>
+
+<div class="features">
+
+<div class="feature">
+<h3>🤖 AI Matching</h3>
+<p>Find the perfect job instantly.</p>
+</div>
+
+<div class="feature">
+<h3>⚡ Fast Apply</h3>
+<p>Apply in seconds.</p>
+</div>
+
+<div class="feature">
+<h3>🌎 Global Jobs</h3>
+<p>Discover opportunities worldwide.</p>
+</div>
+
+<div class="feature">
+<h3>💬 Smart Chat</h3>
+<p>Talk directly with employers.</p>
+</div>
+
+</div>
+
+</div>
 
 </body>
 </html>
