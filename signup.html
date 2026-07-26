@@ -84,6 +84,40 @@ Already have an account?
 </p>
 
 </div>
+<p id="message"></p>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+
+<script>
+const signupForm = document.getElementById("signupForm");
+const message = document.getElementById("message");
+
+signupForm.addEventListener("submit", async function(event) {
+  event.preventDefault();
+
+  const fullName = document.getElementById("fullName").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  message.textContent = "Creating your account...";
+
+  const { error } = await supabaseClient.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { full_name: fullName }
+    }
+  });
+
+  if (error) {
+    message.textContent = error.message;
+    return;
+  }
+
+  message.textContent = "Account created! Check your email to confirm it.";
+  signupForm.reset();
+});
+</script>
 </body>
 </html>
