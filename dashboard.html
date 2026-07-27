@@ -1,1 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - DEENAS.APP</title>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+
+  <style>
+    body{
+      margin:0;
+      font-family:Arial,sans-serif;
+      background:#0f172a;
+      color:white;
+    }
+
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:20px 40px;
+      background:#111827;
+    }
+
+    h1{
+      margin:0;
+    }
+
+    button{
+      background:#2563eb;
+      color:white;
+      border:none;
+      padding:10px 18px;
+      border-radius:8px;
+      cursor:pointer;
+    }
+
+    button:hover{
+      background:#1d4ed8;
+    }
+
+    .container{
+      max-width:1000px;
+      margin:auto;
+      padding:40px;
+    }
+
+    .card{
+      background:#1e293b;
+      padding:25px;
+      border-radius:12px;
+      margin-top:25px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>🚀 DEENAS.APP Dashboard</h1>
+  <button id="logout">Logout</button>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>Welcome!</h2>
+
+    <p id="email">Loading your account...</p>
+  </div>
+
+</div>
+
+<script>
+
+async function loadUser(){
+
+    const { data } = await supabaseClient.auth.getUser();
+
+    if(!data.user){
+        window.location.href="login.html";
+        return;
+    }
+
+    document.getElementById("email").innerHTML =
+        "<strong>Email:</strong> " + data.user.email;
+
+}
+
+loadUser();
+
+document.getElementById("logout").onclick = async ()=>{
+
+    await supabaseClient.auth.signOut();
+
+    window.location.href="index.html";
+
+}
+
+</script>
+
+</body>
+</html>
