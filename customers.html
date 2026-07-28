@@ -1,1 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Customers — Deenas</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #111827;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 24px;
+      background: #0f172a;
+      color: white;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    header a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 950px;
+      margin: auto;
+      padding: 24px;
+    }
+
+    .top-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 24px;
+    }
+
+    .top-section h2 {
+      margin: 0 0 5px;
+    }
+
+    .top-section p {
+      margin: 0;
+      color: #64748b;
+    }
+
+    .add-button {
+      border: none;
+      border-radius: 10px;
+      padding: 13px 18px;
+      background: #2563eb;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 20px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    .form-card,
+    .customer-card {
+      background: white;
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+      margin-bottom: 16px;
+    }
+
+    .form-card {
+      display: none;
+    }
+
+    .form-card h3 {
+      margin-top: 0;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #cbd5e1;
+      border-radius: 9px;
+      font-size: 15px;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+      grid-column: 1 / -1;
+    }
+
+    .save-button {
+      margin-top: 14px;
+      width: 100%;
+      border: none;
+      border-radius: 9px;
+      padding: 14px;
+      background: #16a34a;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .customer-card {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .customer-card h3 {
+      margin: 0 0 7px;
+    }
+
+    .customer-card p {
+      margin: 4px 0;
+      color: #64748b;
+    }
+
+    .delete-button {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      background: #fee2e2;
+      color: #b91c1c;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .empty-message {
+      text-align: center;
+      padding: 35px;
+      color: #64748b;
+      background: white;
+      border-radius: 14px;
+    }
+
+    @media (max-width: 650px) {
+      .top-section,
+      .customer-card {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      textarea {
+        grid-column: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Deenas</h1>
+  <a href="dashboard.html">← Dashboard</a>
+</header>
+
+<main class="container">
+
+  <section class="top-section">
+    <div>
+      <h2>Customers</h2>
+      <p>Keep customer details organized in one place.</p>
+    </div>
+
+    <button class="add-button" id="showFormButton">
+      + Add Customer
+    </button>
+  </section>
+
+  <section class="form-card" id="customerFormCard">
+    <h3>Add a New Customer</h3>
+
+    <form id="customerForm">
+      <div class="form-grid">
+
+        <input
+          id="customerName"
+          type="text"
+          placeholder="Full name"
+          required
+        >
+
+        <input
+          id="customerPhone"
+          type="tel"
+          placeholder="Phone number"
+        >
+
+        <input
+          id="customerEmail"
+          type="email"
+          placeholder="Email address"
+        >
+
+        <input
+          id="customerAddress"
+          type="text"
+          placeholder="Service address"
+        >
+
+        <textarea
+          id="customerNotes"
+          placeholder="Notes about this customer"
+        ></textarea>
+
+      </div>
+
+      <button class="save-button" type="submit">
+        Save Customer
+      </button>
+    </form>
+  </section>
+
+  <input
+    class="search-box"
+    id="searchInput"
+    type="search"
+    placeholder="Search customers by name, phone, or email..."
+  >
+
+  <section id="customerList"></section>
+
+</main>
+
+<script>
+  const customerFormCard = document.getElementById("customerFormCard");
+  const customerForm = document.getElementById("customerForm");
+  const customerList = document.getElementById("customerList");
+  const searchInput = document.getElementById("searchInput");
+  const showFormButton = document.getElementById("showFormButton");
+
+  let customers = JSON.parse(
+    localStorage.getItem("deenasCustomers")
+  ) || [];
+
+  showFormButton.addEventListener("click", function () {
+    const isHidden = customerFormCard.style.display !== "block";
+
+    customerFormCard.style.display = isHidden ? "block" : "none";
+    showFormButton.textContent = isHidden
+      ? "Cancel"
+      : "+ Add Customer";
+  });
+
+  customerForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const customer = {
+      id: Date.now(),
+      name: document.getElementById("customerName").value.trim(),
+      phone: document.getElementById("customerPhone").value.trim(),
+      email: document.getElementById("customerEmail").value.trim(),
+      address: document.getElementById("customerAddress").value.trim(),
+      notes: document.getElementById("customerNotes").value.trim()
+    };
+
+    customers.unshift(customer);
+    saveCustomers();
+
+    customerForm.reset();
+    customerFormCard.style.display = "none";
+    showFormButton.textContent = "+ Add Customer";
+
+    displayCustomers();
+  });
+
+  searchInput.addEventListener("input", function () {
+    displayCustomers(searchInput.value);
+  });
+
+  function deleteCustomer(customerId) {
+    const confirmed = confirm(
+      "Are you sure you want to delete this customer?"
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    customers = customers.filter(
+      customer => customer.id !== customerId
+    );
+
+    saveCustomers();
+    displayCustomers(searchInput.value);
+  }
+
+  function saveCustomers() {
+    localStorage.setItem(
+      "deenasCustomers",
+      JSON.stringify(customers)
+    );
+  }
+
+  function displayCustomers(searchText = "") {
+    const search = searchText.toLowerCase().trim();
+
+    const filteredCustomers = customers.filter(customer => {
+      return (
+        customer.name.toLowerCase().includes(search) ||
+        customer.phone.toLowerCase().includes(search) ||
+        customer.email.toLowerCase().includes(search)
+      );
+    });
+
+    if (filteredCustomers.length === 0) {
+      customerList.innerHTML = `
+        <div class="empty-message">
+          No customers found. Tap “Add Customer” to create your first one.
+        </div>
+      `;
+      return;
+    }
+
+    customerList.innerHTML = filteredCustomers.map(customer => `
+      <article class="customer-card">
+        <div>
+          <h3>${escapeHtml(customer.name)}</h3>
+
+          <p>
+            📞 ${escapeHtml(customer.phone || "No phone number")}
+          </p>
+
+          <p>
+            ✉️ ${escapeHtml(customer.email || "No email address")}
+          </p>
+
+          <p>
+            📍 ${escapeHtml(customer.address || "No address")}
+          </p>
+
+          ${
+            customer.notes
+              ? `<p>📝 ${escapeHtml(customer.notes)}</p>`
+              : ""
+          }
+        </div>
+
+        <button
+          class="delete-button"
+          onclick="deleteCustomer(${customer.id})"
+        >
+          Delete
+        </button>
+      </article>
+    `).join("");
+  }
+
+  function escapeHtml(value) {
+    const element = document.createElement("div");
+    element.textContent = value;
+    return element.innerHTML;
+  }
+
+  displayCustomers();
+</script>
+
+</body>
+</html>
